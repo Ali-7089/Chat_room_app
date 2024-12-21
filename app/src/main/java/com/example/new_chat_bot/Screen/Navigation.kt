@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.new_chat_bot.Model.AuthViewModel
+import com.example.new_chat_bot.Model.MessageViewModel
 import com.example.new_chat_bot.Model.RoomViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -16,7 +17,8 @@ fun navigation(){
     var navController = rememberNavController();
     val authViewModel:AuthViewModel = viewModel()
     val roomViewModel:RoomViewModel= viewModel()
-    val
+    val messageViewModel:MessageViewModel = viewModel()
+
 
     NavHost(navController = navController, startDestination = Screen.SignUp.name) {
         composable(Screen.SignUp.name){
@@ -35,8 +37,8 @@ fun navigation(){
             }
         }
         composable("${Screen.ChatScreen.name}/{room_id}"){
-                val id = it.arguments?.get("room_id").toString()
-                ChatScreen(roomId = id)
+                val id = it.arguments?.get("room_id").toString()?:""
+                ChatScreen(roomId = id,messageViewModel)
         }
     }
 }

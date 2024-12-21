@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.callbackFlow
 class MessageRepository(
     val firestore: FirebaseFirestore
 ){
-     suspend fun createMessage(roomId:String,message: Message):Result<Unit> =
+     suspend fun sendMessage(roomId:String,message: Message):Result<Unit> =
       try{
            firestore.collection("rooms").document(roomId).
            collection("messages").add(message).await()

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.new_chat_bot.Model.MessageViewModel
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -38,9 +39,10 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
-    roomId:String
+    roomId:String,
+    messageViewModel: MessageViewModel
 ) {
-
+     messageViewModel.setRoomId(roomId)
     Column(
         modifier = Modifier
             .fillMaxSize()
