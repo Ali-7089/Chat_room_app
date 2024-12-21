@@ -38,6 +38,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
+    roomId:String
 ) {
 
     Column(

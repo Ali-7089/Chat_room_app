@@ -31,7 +31,8 @@ import com.example.new_chat_bot.Model.RoomViewModel
 
 @Composable
 fun chatRoomListScreen(
-    roomViewModel: RoomViewModel
+    roomViewModel: RoomViewModel,
+    onClickJoined: (Room) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("")}
@@ -49,7 +50,7 @@ fun chatRoomListScreen(
          LazyColumn(){
 //             items(listOfRooms){
 //                 item ->
-//                   RoomItem(item)
+//                   RoomItem(item,  onClickJoined(room) )
 //             }
          }
 
@@ -109,7 +110,9 @@ fun chatRoomListScreen(
 
 
 @Composable
-fun RoomItem(room: Room) {
+fun RoomItem(room: Room,
+            onClickJoined:(Room)->Unit
+             ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,7 +121,9 @@ fun RoomItem(room: Room) {
     ) {
         Text(text = room.room_name, fontSize = 16.sp, fontWeight = FontWeight.Normal)
         OutlinedButton(
-            onClick = {  }
+            onClick = {
+              onClickJoined(room)
+            }
         ) {
             Text("Join")
         }
