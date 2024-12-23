@@ -37,6 +37,7 @@ class MessageViewModel:ViewModel(){
 
     fun setRoomId(room_id :String){
        _roomId.value = room_id
+        loadMessages()
     }
     fun loadMessages(){
        viewModelScope.launch {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.new_chat_bot.Data.Message
 import com.example.new_chat_bot.Model.MessageViewModel
 import java.time.Instant
 import java.time.LocalDateTime
@@ -43,6 +47,8 @@ fun ChatScreen(
     messageViewModel: MessageViewModel
 ) {
      messageViewModel.setRoomId(roomId)
+     val messages by messageViewModel.messages.observeAsState(emptyList())
+     val text  = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +58,11 @@ fun ChatScreen(
         LazyColumn(
             modifier = Modifier.weight(1f)
         )  {
-
+             items(messages){msg->
+                 ChatMessageItem(message = msg.copy(isCurrentUserSent =
+                 msg.senderId == messageViewModel.currentUser.value?.email
+                 ))
+             }
             }
         }
 
@@ -64,8 +74,8 @@ fun ChatScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BasicTextField(
-                value = "",
-                onValueChange = {  },
+                value = text.value,
+                onValueChange = { text.value = it  },
                 textStyle = TextStyle.Default.copy(fontSize = 16.sp),
                 modifier = Modifier
                     .weight(1f)
@@ -75,7 +85,11 @@ fun ChatScreen(
             IconButton(
                 onClick = {
                     // Send the message when the icon is clicked
-
+                    if (text.value.isNotBlank()){
+                        messageViewModel.sendMessage(text.value.toString().trim())
+                        text.value = ""
+                    }
+                    messageViewModel.loadMessages()
                 }
             ) {
                 Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
@@ -83,17 +97,19 @@ fun ChatScreen(
         }
     }
 
-/*fun ChatMessageItem(message: Message) {
+@Composable
+@RequiresApi(Build.VERSION_CODES.O)
+fun ChatMessageItem(message: Message) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalAlignment = if (message.isSentByCurrentUser) Alignment.End else Alignment.Start
+        horizontalAlignment = if (message.isCurrentUserSent) Alignment.End else Alignment.Start
     ) {
         Box(
             modifier = Modifier
                 .background(
-                    if (message.isSentByCurrentUser) colorResource(id = R.color.purple_700) else Color.Gray,
+                    if (message.isCurrentUserSent) Color.Blue else Color.Gray,
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(8.dp)
@@ -121,7 +137,6 @@ fun ChatScreen(
         )
     }
 }
- */
 @RequiresApi(Build.VERSION_CODES.O)
 private fun formatTimestamp(timestamp: Long): String {
     val messageDateTime =
