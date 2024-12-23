@@ -29,7 +29,9 @@ import com.example.new_chat_bot.Model.AuthViewModel
 @Composable
 fun LoginScreen(
    authViewModel: AuthViewModel,
-  onNavigateToSignUp:()->Unit
+  onNavigateToSignUp:()->Unit,
+   onSignInSucces: () -> Unit
+
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember {
@@ -63,6 +65,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 authViewModel.signIn(email, password)
+                onSignInSucces()
                 email = ""
                 password = ""
 

@@ -8,6 +8,8 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import java.lang.NullPointerException
 
+
+
 class UserRespository(
     val auth: FirebaseAuth,
     val firestore: FirebaseFirestore

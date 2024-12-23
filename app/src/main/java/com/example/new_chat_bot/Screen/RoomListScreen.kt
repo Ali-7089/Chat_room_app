@@ -36,7 +36,7 @@ fun chatRoomListScreen(
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("")}
-//    val listOfRooms by roomViewModel.room.observeAsState(emptyList())
+    val listOfRooms by roomViewModel.room.observeAsState(emptyList())
 
     Column(
         modifier = Modifier
@@ -48,10 +48,10 @@ fun chatRoomListScreen(
 
         // Display a list of chat rooms
          LazyColumn(){
-//             items(listOfRooms){
-//                 item ->
-//                   RoomItem(item,  onClickJoined(room) )
-//             }
+             items(listOfRooms){
+                 item ->
+                   RoomItem(item, { onClickJoined(item) } )
+             }
          }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -90,7 +90,7 @@ fun chatRoomListScreen(
                         onClick = {
                             if (name.isNotBlank()) {
                                 showDialog = false
-
+                                roomViewModel.createRoom(name)
                             }
                         }
                     ) {

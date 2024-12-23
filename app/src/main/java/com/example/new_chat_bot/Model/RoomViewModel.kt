@@ -11,25 +11,31 @@ import kotlinx.coroutines.launch
 import com.example.new_chat_bot.Screen.Result
 
 class RoomViewModel():ViewModel(){
-    private val _rooms = MutableLiveData<Result<List<Room>>>()
-    val room :LiveData<Result<List<Room>>> get()  = _rooms
+    private val _rooms = MutableLiveData<List<Room>>()
+    val room :LiveData<List<Room>> get()  = _rooms
 
     val roomRepository :RoomRepository
     init {
        roomRepository = RoomRepository(
            FirebaseFirestore.getInstance()
        )
+        getRoom()
     }
 
     fun createRoom(name:String){
-        val room = Room(name)
+        val room = Room(room_name = name)
         viewModelScope.launch {
             roomRepository.createRoom(room)
         }
     }
     fun getRoom(){
         viewModelScope.launch {
-            _rooms.value = roomRepository.getRooms()
+            when (val result = roomRepository.getRooms()) {
+                is Result.Success -> _rooms.value = result.data
+                is Result.Error -> {
+
+                }
+            }
         }
     }
 }

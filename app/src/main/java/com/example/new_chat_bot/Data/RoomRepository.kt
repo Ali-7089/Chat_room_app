@@ -3,7 +3,6 @@ package com.example.new_chat_bot.Data
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import  com.example.new_chat_bot.Screen.Result;
-import com.google.firebase.firestore.toObjects
 
 class RoomRepository(
     val firestore: FirebaseFirestore
@@ -20,8 +19,10 @@ class RoomRepository(
 
     suspend fun getRooms():Result<List<Room>> =
         try {
-           val rooms = firestore.collection("rooms").get().await()
-               .toObjects(Room::class.java)
+            val querySnapshot = firestore.collection("rooms").get().await()
+            val rooms = querySnapshot.documents.map { document ->
+                document.toObject(Room::class.java)!!.copy(room_id = document.id)
+            }
            Result.Success(rooms)
         }catch (e:Exception){
             Result.Error(e)

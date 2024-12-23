@@ -22,13 +22,17 @@ fun navigation(){
 
     NavHost(navController = navController, startDestination = Screen.SignUp.name) {
         composable(Screen.SignUp.name){
-            SignUpScreen(authViewModel){
-                navController.navigate(Screen.SignIn.name)
+            SignUpScreen(authViewModel,
+                onNavigateToSignIn = {  navController.navigate(Screen.SignIn.name)}
+                ){
+                navController.navigate(Screen.ChatRoomList.name)
             }
         }
         composable(Screen.SignIn.name){
-            LoginScreen(authViewModel){
-                navController.navigate(Screen.SignIn.name)
+            LoginScreen(authViewModel,
+            onNavigateToSignUp = {navController.navigate(Screen.SignUp.name)}
+            ){
+                    navController.navigate(Screen.ChatRoomList.name)
             }
         }
         composable(Screen.ChatRoomList.name){
